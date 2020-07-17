@@ -39,7 +39,6 @@ public class Employee {
 
     private boolean working = true;
 
-    @Column(nullable = false)
     private long categoryId;
 
     @Column(length = 128)
