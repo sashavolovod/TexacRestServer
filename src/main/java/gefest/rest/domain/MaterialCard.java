@@ -53,7 +53,7 @@ public class MaterialCard {
     private double grindingTime;  // время шлифовальной обработки
 
     private double wight;         // вес одной заготовки
-    private double wightTotal;    // вес всего
+    private double wightTotal;    // вес всего ++
 
 
 
