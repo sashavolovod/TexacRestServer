@@ -23,10 +23,10 @@ public class MaterialCard {
     @Column(length = 128)
     private String materialTitle;// название материала
 
-    @Column(length = 32)
+    @Column(length = 64)
     private String blackSmithOp; // кузнечная операция
 
-    @Column(length = 32)
+    @Column(length = 64)
     private String detailSize;
 
     @Column(nullable = false)
@@ -35,21 +35,21 @@ public class MaterialCard {
     @Column(nullable = false)
     private double detailQty;
 
-    @Column(length = 32)
+    @Column(length = 64)
     private String millingOp;     // фрезерная обработка
 
-    @Column(length = 32)
+    @Column(length = 64)
     private String planerOp;      // строгальная обработка
 
-    @Column(length = 32)
+    @Column(length = 64)
     private String grindingOp;    // шлифовальная обработка
 
     private double millingTime;   // время фрезерной обработки
     private double planerTime;    // время строгальной обработки
     private double grindingTime;  // время шлифовальной обработки
 
-    private double wight;         // масса одной заготовки
-    private double wightTotal;    // общая масса
+    private double weight;         // масса одной заготовки
+    private double weightTotal;    // общая масса
 
     private boolean supplementToOrder;  // дополнение для заказ-наряда
 
@@ -203,20 +203,20 @@ public class MaterialCard {
         this.grindingTime = grindingTime;
     }
 
-    public double getWight() {
-        return wight;
+    public double getWeight() {
+        return weight;
     }
 
-    public void setWight(double wight) {
-        this.wight = wight;
+    public void setWeight(double wight) {
+        this.weight = wight;
     }
 
-    public double getWightTotal() {
-        return wightTotal;
+    public double getWeightTotal() {
+        return weightTotal;
     }
 
-    public void setWightTotal(double wightTotal) {
-        this.wightTotal = wightTotal;
+    public void setWeightTotal(double wightTotal) {
+        this.weightTotal = wightTotal;
     }
 
     public boolean isSupplementToOrder() {
