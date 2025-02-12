@@ -1,301 +1,96 @@
 package gefest.rest.domain;
 
-import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
+import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
-@Table(name = "mat_card", indexes = { @Index(name = "idx_order_id", columnList = "orderId")})
-public class MaterialCard {
-
+@Table(name = "material_cards")
+public class MaterialCard extends BaseEntity {
     @Id
-    private long matCardId;
+    private Long materialCardId;
 
-    private long orderId;
+    @Column(name = "order_number")
+    private Integer orderNumber;
 
-    private int detailNumber;
+    @Column(name = "detail_number")
+    private Integer detailNumber;
 
-    @Column(length = 32)
-    private String detailTONumber;
+    @Column(name = "tooling_detail_number", nullable = false, length = 32)
+    private String toolingDetailNumber;
 
-    @Column(length = 64)
-    private String detailTOTitle;
+    @Column(name = "detail_name", length = 64)
+    private String detailName;
 
-    @Column(length = 128)
-    private String materialTitle;// название материала
+    @Column(length = 100)
+    private String material;
 
-    @Column(length = 64)
-    private String blackSmithOp; // кузнечная операция
+    @Column(name = "forging_operation", length = 30)
+    private String forgingOperation;
 
-    @Column(length = 64)
-    private String detailSize;
+    @Column(name = "detail_dimensions", length = 20)
+    private String detailDimensions;
 
     @Column(nullable = false)
-    private double blankQty;
+    private Float quantity;
 
-    @Column(nullable = false)
-    private double detailQty;
+    @Column(name = "details_quantity", nullable = false)
+    private Float detailsQuantity;
 
-    @Column(length = 64)
-    private String millingOp;     // фрезерная обработка
+    @Column(name = "milling_processing", length = 15)
+    private String millingProcessing;
 
-    @Column(length = 64)
-    private String planerOp;      // строгальная обработка
+    @Column(name = "planing_processing", length = 30)
+    private String planingProcessing;
 
-    @Column(length = 64)
-    private String grindingOp;    // шлифовальная обработка
+    @Column(name = "grinding_processing", length = 50)
+    private String grindingProcessing;
 
-    private double millingTime;   // время фрезерной обработки
-    private double planerTime;    // время строгальной обработки
-    private double grindingTime;  // время шлифовальной обработки
+    @Column(name = "milling_time")
+    private Float millingTime;
 
-    private double weight;         // масса одной заготовки
-    private double weightTotal;    // общая масса
+    @Column(name = "planing_time")
+    private Float planingTime;
 
-    private boolean supplementToOrder;  // дополнение для заказ-наряда
+    @Column(name = "grinding_time")
+    private Float grindingTime;
 
-    private Date technologyEditTime;    // дата изменения технологии
+    @Column(name = "blank_weight")
+    private Float blankWeight;
 
-    private int storeId;                // склад
+    @Column(name = "total_weight")
+    private Float totalWeight;
 
-    private long unitOfMeasureId;  // код единицы измерения
+    @Column(name = "additional_for_work_order")
+    private Boolean additionalForWorkOrder;
 
-    private int materialCode;
+    @Column(name = "tech_edit_date")
+    private LocalDateTime techEditDate;
 
-    private boolean annealing;
+    private Integer warehouse;
 
-    @Column(length = 64)
-    private  String thermalOp;
+    @Column(name = "unit_code")
+    private Integer unitCode;
 
-    @Column(length = 64)
-    private String planerThermalOp;
+    @Column(name = "material_code")
+    private Integer materialCode;
 
-    private double detailWeight;
+    private Boolean annealing;
 
-    private boolean ordered;
+    private String term;
 
-    public MaterialCard() {   }
+    @Column(name = "planing_term", length = 50)
+    private String planingTerm;
 
-    public long getMatCardId() {
-        return matCardId;
-    }
+    @Column(name = "detail_weight")
+    private Double detailWeight;
 
-    public void setMatCardId(long matCardId) {
-        this.matCardId = matCardId;
-    }
+    private Boolean ordered;
 
-    public long getOrderId() {
-        return orderId;
-    }
+    @Column(length = 100)
+    private String material2;
 
-    public void setOrderId(long orderId) {
-        this.orderId = orderId;
-    }
-
-    public int getDetailNumber() {
-        return detailNumber;
-    }
-
-    public void setDetailNumber(int detailNumber) {
-        this.detailNumber = detailNumber;
-    }
-
-    public String getDetailTONumber() {
-        return detailTONumber;
-    }
-
-    public void setDetailTONumber(String detailTONumber) {
-        this.detailTONumber = detailTONumber;
-    }
-
-    public String getDetailTOTitle() {
-        return detailTOTitle;
-    }
-
-    public void setDetailTOTitle(String detailTOTitle) {
-        this.detailTOTitle = detailTOTitle;
-    }
-
-    public String getMaterialTitle() {
-        return materialTitle;
-    }
-
-    public void setMaterialTitle(String materialTitle) {
-        this.materialTitle = materialTitle;
-    }
-
-    public String getBlackSmithOp() {
-        return blackSmithOp;
-    }
-
-    public void setBlackSmithOp(String blackSmithOp) {
-        this.blackSmithOp = blackSmithOp;
-    }
-
-    public String getDetailSize() {
-        return detailSize;
-    }
-
-    public void setDetailSize(String detailSize) {
-        this.detailSize = detailSize;
-    }
-
-    public double getBlankQty() {
-        return blankQty;
-    }
-
-    public void setBlankQty(double blankQty) {
-        this.blankQty = blankQty;
-    }
-
-    public double getDetailQty() {
-        return detailQty;
-    }
-
-    public void setDetailQty(double detailQty) {
-        this.detailQty = detailQty;
-    }
-
-    public String getMillingOp() {
-        return millingOp;
-    }
-
-    public void setMillingOp(String millingOp) {
-        this.millingOp = millingOp;
-    }
-
-    public String getPlanerOp() {
-        return planerOp;
-    }
-
-    public void setPlanerOp(String planerOp) {
-        this.planerOp = planerOp;
-    }
-
-    public String getGrindingOp() {
-        return grindingOp;
-    }
-
-    public void setGrindingOp(String grindingOp) {
-        this.grindingOp = grindingOp;
-    }
-
-    public double getMillingTime() {
-        return millingTime;
-    }
-
-    public void setMillingTime(double millingTime) {
-        this.millingTime = millingTime;
-    }
-
-    public double getPlanerTime() {
-        return planerTime;
-    }
-
-    public void setPlanerTime(double planerTime) {
-        this.planerTime = planerTime;
-    }
-
-    public double getGrindingTime() {
-        return grindingTime;
-    }
-
-    public void setGrindingTime(double grindingTime) {
-        this.grindingTime = grindingTime;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double wight) {
-        this.weight = wight;
-    }
-
-    public double getWeightTotal() {
-        return weightTotal;
-    }
-
-    public void setWeightTotal(double wightTotal) {
-        this.weightTotal = wightTotal;
-    }
-
-    public boolean isSupplementToOrder() {
-        return supplementToOrder;
-    }
-
-    public void setSupplementToOrder(boolean supplementToOrder) {
-        this.supplementToOrder = supplementToOrder;
-    }
-
-    public Date getTechnologyEditTime() {
-        return technologyEditTime;
-    }
-
-    public void setTechnologyEditTime(Date technologyEditTime) {
-        this.technologyEditTime = technologyEditTime;
-    }
-
-    public int getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(int storeId) {
-        this.storeId = storeId;
-    }
-
-    public long getUnitOfMeasureId() {
-        return unitOfMeasureId;
-    }
-
-    public void setUnitOfMeasureId(long unitOfMeasureId) {
-        this.unitOfMeasureId = unitOfMeasureId;
-    }
-
-    public int getMaterialCode() {
-        return materialCode;
-    }
-
-    public void setMaterialCode(int materialCode) {
-        this.materialCode = materialCode;
-    }
-
-    public boolean isAnnealing() {
-        return annealing;
-    }
-
-    public void setAnnealing(boolean annealing) {
-        this.annealing = annealing;
-    }
-
-    public String getThermalOp() {
-        return thermalOp;
-    }
-
-    public void setThermalOp(String thermalOp) {
-        this.thermalOp = thermalOp;
-    }
-
-    public String getPlanerThermalOp() {
-        return planerThermalOp;
-    }
-
-    public void setPlanerThermalOp(String planerThermalOp) {
-        this.planerThermalOp = planerThermalOp;
-    }
-
-    public double getDetailWeight() {
-        return detailWeight;
-    }
-
-    public void setDetailWeight(double detailWeight) {
-        this.detailWeight = detailWeight;
-    }
-
-    public boolean isOrdered() {
-        return ordered;
-    }
-
-    public void setOrdered(boolean ordered) {
-        this.ordered = ordered;
-    }
+    @Column(name = "card_num")
+    private Integer cardNum;
 }

@@ -1,0 +1,1 @@
+alter table orders rename customerMaterial to customer_material;
