@@ -1,10 +1,7 @@
 package gefest.rest.controller;
 import gefest.rest.domain.*;
 import gefest.rest.repo.*;
-import org.apache.catalina.util.ErrorPageSupport;
 import org.slf4j.*;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +17,18 @@ public class SyncController {
     final EmployeeRepository employeeRepository;
     final OrderExecutionRepository orderExecutionRepository;
     final TechnologyRepository technologyRepository;
+    final CustomerRepository customerRepository;
 
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
 
 
-    public SyncController(OrderRepository orderRepository, MaterialCardRepository materialCardRepository, EmployeeRepository employeeRepository, OrderExecutionRepository orderExecutionRepository, TechnologyRepository technologyRepository) {
+    public SyncController(OrderRepository orderRepository, MaterialCardRepository materialCardRepository, EmployeeRepository employeeRepository, OrderExecutionRepository orderExecutionRepository, TechnologyRepository technologyRepository, CustomerRepository customerRepository) {
         this.orderRepository = orderRepository;
         this.materialCardRepository = materialCardRepository;
         this.employeeRepository = employeeRepository;
         this.orderExecutionRepository = orderExecutionRepository;
         this.technologyRepository = technologyRepository;
+        this.customerRepository = customerRepository;
     }
 
     @PostMapping("/orders")
@@ -292,4 +291,53 @@ public class SyncController {
                             "Произошла неизвестная ошибка при синхронизации"));
         }
     }
+
+    @PostMapping("/customers")
+    public ResponseEntity<?> syncCustomers(@RequestBody List<Customer> customers) {
+        try {
+            if (customers == null || customers.isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiError(LocalDateTime.now(), "Customers list is empty or null"));
+            }
+            log.info("Получено: {} записей", customers.size());
+            Map<Long, Customer> existingCustomers = new HashMap<>();
+            log.info("Начало загрузки существующих записей заказчиков");
+            try {
+                Iterable<Customer> allCustomers = customerRepository.findAll();
+                for (Customer customer : allCustomers) {
+                    existingCustomers.put(customer.getCustomerId(), customer);
+                }
+            } catch (Exception e) {
+                log.error("Ошибка при загрузке существующих записей заказчиков", e);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(new ApiError(LocalDateTime.now(),
+                                "Ошибка при работе с базой данных при загрузке существующих записей"));
+            }
+            log.info("Map готова");
+            List<Customer> forSaveCustomers = new ArrayList<>();
+            for (Customer customer : customers) {
+                Customer existingCustomer = existingCustomers.get(customer.getCustomerId());
+                if (existingCustomer == null || !customer.toString().equals(existingCustomer.toString())) {
+                    forSaveCustomers.add(customer);
+                }
+            }
+            log.info("forSaveCustomers List готова");
+            try {
+                customerRepository.saveAll(forSaveCustomers);
+                log.info("Обновлено: {} записей", forSaveCustomers.size());
+            } catch (Exception e) {
+                log.error("Ошибка при сохранении записей заказчиков", e);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(new ApiError(LocalDateTime.now(), "Database error while saving customers"));
+            }
+            return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),
+                    String.format("Успешно синхронизировано %d записей", forSaveCustomers.size())));
+        } catch (Exception e) {
+            log.error("Необработанная ошибка при синхронизации записей заказчиков", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiError(LocalDateTime.now(),
+                            "Произошла неизвестная ошибка при синхронизации"));
+        }
+    }
+
 }
