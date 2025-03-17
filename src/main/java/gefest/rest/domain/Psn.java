@@ -1,10 +1,8 @@
 package gefest.rest.domain;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -33,7 +31,8 @@ public class Psn extends BaseEntity {
 
     public Psn() {    }
 
-    public Psn(String docNumber, LocalDateTime docDate, int orderId, String orderNumber, String orderDescription, String customer, int qty, String unitName, String computerName) {
+    public Psn(LocalDateTime created, String docNumber, LocalDateTime docDate, int orderId, String orderNumber, String orderDescription, String customer, int qty, String unitName, String computerName) {
+        this.setCreated(created);
         this.docNumber = docNumber;
         this.docDate = docDate;
         this.orderId = orderId;

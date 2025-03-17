@@ -24,4 +24,12 @@ public class BaseEntity implements IEntity {
         public Long getId() {
                 return null;
         }
+
+        public LocalDateTime getCreated() {
+                return created;
+        }
+
+        public void setCreated(LocalDateTime created) {
+                this.created = created;
+        }
 }

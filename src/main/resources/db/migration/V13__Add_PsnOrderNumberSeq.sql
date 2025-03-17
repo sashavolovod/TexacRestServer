@@ -1,0 +1,5 @@
+CREATE SEQUENCE IF NOT EXISTS psn_order_number_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO CYCLE;
