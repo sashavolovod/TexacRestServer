@@ -18,17 +18,19 @@ public class SyncController {
     final OrderExecutionRepository orderExecutionRepository;
     final TechnologyRepository technologyRepository;
     final CustomerRepository customerRepository;
+    final RequirementRepository requirementRepository;
 
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
 
 
-    public SyncController(OrderRepository orderRepository, MaterialCardRepository materialCardRepository, EmployeeRepository employeeRepository, OrderExecutionRepository orderExecutionRepository, TechnologyRepository technologyRepository, CustomerRepository customerRepository) {
+    public SyncController(OrderRepository orderRepository, MaterialCardRepository materialCardRepository, EmployeeRepository employeeRepository, OrderExecutionRepository orderExecutionRepository, TechnologyRepository technologyRepository, CustomerRepository customerRepository, RequirementRepository requirementRepository) {
         this.orderRepository = orderRepository;
         this.materialCardRepository = materialCardRepository;
         this.employeeRepository = employeeRepository;
         this.orderExecutionRepository = orderExecutionRepository;
         this.technologyRepository = technologyRepository;
         this.customerRepository = customerRepository;
+        this.requirementRepository = requirementRepository;
     }
 
     @PostMapping("/orders")
@@ -339,5 +341,41 @@ public class SyncController {
                             "Произошла неизвестная ошибка при синхронизации"));
         }
     }
+
+    @PostMapping("/requirements")
+    public ResponseEntity<?> syncRequirements(@RequestBody List<Requirement> requirements) {
+
+        try {
+            if (requirements == null || requirements.isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiError(LocalDateTime.now(), "Requirements list is empty or null"));
+            }
+            log.info("Получено: {} записей требований", requirements.size());
+            Requirement requirement = requirements.get(0);
+            log.info(requirement.toString());
+            for (RequirementDetail d : requirement.getDetails()) {
+                //d.setRequirement(requirement);
+                log.info(d.toString());
+            }
+
+            for (Requirement req : requirements) {
+                for (RequirementDetail detail : req.getDetails()) {
+                    detail.setRequirement(req);
+                }
+            }
+
+            requirementRepository.saveAll(requirements);
+
+            return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),
+                    String.format("Успешно синхронизировано %d требований", requirements.size())));
+        } catch (Exception e) {
+            log.error("Необработанная ошибка при синхронизации требований", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiError(LocalDateTime.now(),
+                            "Произошла неизвестная ошибка при синхронизации требований"));
+        }
+
+    }
+
 
 }

@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>gefest</groupId>
-	<artifactId>rest</artifactId>
+	<artifactId>texac</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>rest</name>
-	<description>API for Texac </description>
+	<description>Texac REST API </description>
 
 	<properties>
 		<java.version>17</java.version>

@@ -1,5 +1,8 @@
 package gefest.rest;
 
+import gefest.rest.controller.PsnOrderNumberController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
 
 //@Component
 public class MyLogFilter implements Filter{
+    private static final Logger log = LoggerFactory.getLogger(MyLogFilter.class);
     @Override
     public void init(FilterConfig filterConfig) {
         System.out.println("init");
@@ -23,12 +27,19 @@ public class MyLogFilter implements Filter{
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("doFilter");
+
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
         RequestWrapper wrapper = new RequestWrapper((HttpServletRequest) servletRequest);
+        String requestURI = request.getRequestURI();
+        String queryString = request.getQueryString();
+        String fullURL = (queryString != null) ? requestURI + "?" + queryString : requestURI;
+
+        log.info(servletRequest.getRemoteAddr() + "\t " + request.getMethod() + ": " + fullURL);
+
         if ("POST".equals(wrapper.getMethod())) {
             byte[] body = StreamUtils.copyToByteArray(wrapper.getInputStream());
             String json = new String(body, StandardCharsets.UTF_8);
-            System.out.println(wrapper.getRemoteAddr() + ": " + json);
+            log.info(wrapper.getRemoteAddr() + ": " + json);
         }
         filterChain.doFilter(wrapper, servletResponse);
         return;
